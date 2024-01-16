@@ -15,16 +15,18 @@ import com.aldebaran.qi.sdk.builder.ChatBuilder
 import com.aldebaran.qi.sdk.builder.QiChatbotBuilder
 import com.aldebaran.qi.sdk.builder.TopicBuilder
 import com.aldebaran.qi.sdk.design.activity.RobotActivity
-import com.softbankrobotics.sample.attentionstatechecker.R
+import com.softbankrobotics.R
+import com.softbankrobotics.databinding.ActivityIntroductionBinding
 import com.softbankrobotics.sample.attentionstatechecker.game.GameActivity
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_introduction.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 
 class IntroductionActivity : RobotActivity(), RobotLifecycleCallbacks {
+
+    private lateinit var binding: ActivityIntroductionBinding
 
     private var chat: Chat? = null
     private var qiChatbot: QiChatbot? = null
@@ -38,15 +40,17 @@ class IntroductionActivity : RobotActivity(), RobotLifecycleCallbacks {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_introduction)
+        binding = ActivityIntroductionBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
-        startButton.setOnCheckedChangeListener { _, isChecked ->
+        binding.startButton.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 goToBookmark(startBookmark)
             }
         }
 
-        closeButton.setOnClickListener { finishAffinity() }
+        binding.closeButton.setOnClickListener { finishAffinity() }
 
         QiSDK.register(this, this)
     }
@@ -122,7 +126,7 @@ class IntroductionActivity : RobotActivity(), RobotLifecycleCallbacks {
 
     private fun displayStartButton() {
         runOnUiThread {
-            startButton.apply {
+            binding.startButton.apply {
                 visibility = View.VISIBLE
             }
         }
@@ -130,7 +134,7 @@ class IntroductionActivity : RobotActivity(), RobotLifecycleCallbacks {
 
     private fun hideStartButton() {
         runOnUiThread {
-            startButton.apply {
+            binding.startButton.apply {
                 isChecked = false
                 visibility = View.INVISIBLE
             }
@@ -139,7 +143,7 @@ class IntroductionActivity : RobotActivity(), RobotLifecycleCallbacks {
 
     private fun checkStartButton() {
         runOnUiThread {
-            startButton.apply {
+            binding.startButton.apply {
                 isChecked = true
             }
         }

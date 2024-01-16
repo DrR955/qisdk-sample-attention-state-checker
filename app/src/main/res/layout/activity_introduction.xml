@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".introduction.IntroductionActivity">
+    tools:context=".sample.attentionstatechecker.introduction.IntroductionActivity">
 
     <ImageView
         android:id="@+id/closeButton"

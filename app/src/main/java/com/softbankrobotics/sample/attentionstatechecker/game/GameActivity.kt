@@ -6,25 +6,28 @@ package com.softbankrobotics.sample.attentionstatechecker.game
 
 import android.content.Intent
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.RawRes
 import com.aldebaran.qi.sdk.QiSDK
 import com.aldebaran.qi.sdk.design.activity.RobotActivity
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayStrategy
-import com.softbankrobotics.sample.attentionstatechecker.R
+import com.softbankrobotics.R
+import com.softbankrobotics.databinding.ActivityGameBinding
 import com.softbankrobotics.sample.attentionstatechecker.introduction.IntroductionActivity
 import com.softbankrobotics.sample.attentionstatechecker.model.data.Direction
 import com.softbankrobotics.sample.attentionstatechecker.model.data.Direction.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_game.*
 
 /**
  * The game activity.
  */
 class GameActivity : RobotActivity() {
+
+    private lateinit var binding: ActivityGameBinding
 
     private val gameMachine = GameMachine()
 
@@ -38,11 +41,13 @@ class GameActivity : RobotActivity() {
         super.onCreate(savedInstanceState)
 
         setSpeechBarDisplayStrategy(SpeechBarDisplayStrategy.OVERLAY)
-        setContentView(R.layout.activity_game)
+        binding = ActivityGameBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
-        homeButton.setOnClickListener { goToHome() }
-        closeButton.setOnClickListener { finishAffinity() }
-        stopButton.setOnCheckedChangeListener { _, isChecked ->
+        binding.homeButton.setOnClickListener { goToHome() }
+        binding.closeButton.setOnClickListener { finishAffinity() }
+        binding.stopButton.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 gameMachine.postEvent(GameEvent.Stop)
             }
@@ -53,7 +58,7 @@ class GameActivity : RobotActivity() {
 
     override fun onResume() {
         super.onResume()
-        stopButton.isChecked = false
+        binding.stopButton.isChecked = false
 
         disposables.add(gameMachine.gameState()
                 .subscribeOn(Schedulers.io())
@@ -136,27 +141,27 @@ class GameActivity : RobotActivity() {
     }
 
     private fun hideExpectedDirection() {
-        expectedDirectionTextView.text = ""
-        humanImageView.visibility = View.INVISIBLE
+        binding.expectedDirectionTextView.text = ""
+        binding.humanImageView.visibility = View.INVISIBLE
     }
 
     private fun showExpectedDirection(direction: Direction) {
-        expectedDirectionTextView.text = getString(R.string.look_instruction, direction.toString())
-        humanImageView.visibility = View.VISIBLE
-        humanImageView.setImageResource(humanImageFromDirection(direction))
+        binding.expectedDirectionTextView.text = getString(R.string.look_instruction, direction.toString())
+        binding.humanImageView.visibility = View.VISIBLE
+        binding.humanImageView.setImageResource(humanImageFromDirection(direction))
     }
 
     private fun showNeutralHuman() {
-        humanImageView.visibility = View.VISIBLE
-        humanImageView.setImageResource(R.drawable.ic_user_face)
+        binding.humanImageView.visibility = View.VISIBLE
+        binding.humanImageView.setImageResource(R.drawable.ic_user_face)
     }
 
     private fun hideTrophy() {
-        trophyImageView.visibility = View.INVISIBLE
+        binding.trophyImageView.visibility = View.INVISIBLE
     }
 
     private fun showTrophy() {
-        trophyImageView.visibility = View.VISIBLE
+        binding.trophyImageView.visibility = View.VISIBLE
     }
 
     private fun humanImageFromDirection(direction: Direction) =
@@ -169,22 +174,22 @@ class GameActivity : RobotActivity() {
             }
 
     private fun hideProgress() {
-        progressTextView.visibility = View.INVISIBLE
+        binding.progressTextView.visibility = View.INVISIBLE
     }
 
     private fun showProgress(matched: Int, total: Int) {
-        progressTextView.apply {
+        binding.progressTextView.apply {
             visibility = View.VISIBLE
             text = getString(R.string.progress, matched, total)
         }
     }
 
     private fun hideStop() {
-        stopButton.visibility = View.INVISIBLE
+        binding.stopButton.visibility = View.INVISIBLE
     }
 
     private fun showStop() {
-        stopButton.visibility = View.VISIBLE
+        binding.stopButton.visibility = View.VISIBLE
     }
 
     private fun goToHome() {
@@ -200,12 +205,16 @@ class GameActivity : RobotActivity() {
     }
 
     private fun hideSystemUI() {
-        val decorView = window.decorView
-        decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_FULLSCREEN)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.setDecorFitsSystemWindows(false)
+        } else {
+            val decorView = window.decorView
+            decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_FULLSCREEN)
+        }
     }
 }

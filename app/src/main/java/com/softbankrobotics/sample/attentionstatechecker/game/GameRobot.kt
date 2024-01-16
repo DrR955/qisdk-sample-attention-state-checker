@@ -9,7 +9,7 @@ import com.aldebaran.qi.Future
 import com.aldebaran.qi.sdk.QiContext
 import com.aldebaran.qi.sdk.RobotLifecycleCallbacks
 import com.aldebaran.qi.sdk.builder.SayBuilder
-import com.softbankrobotics.sample.attentionstatechecker.R
+import com.softbankrobotics.R
 import com.softbankrobotics.sample.attentionstatechecker.model.data.Direction
 import com.softbankrobotics.sample.attentionstatechecker.utils.cancellation
 import com.softbankrobotics.sample.attentionstatechecker.utils.directionObservable
@@ -130,6 +130,7 @@ internal class GameRobot(private val gameMachine: GameMachine) : RobotLifecycleC
                 say(R.string.stopping_sentence)
                         .andThenConsume { gameMachine.postEvent(GameEvent.Stopped) }
             }
+            else -> {}
         }
     }
 

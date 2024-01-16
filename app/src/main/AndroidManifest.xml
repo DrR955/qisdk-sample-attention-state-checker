@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.softbankrobotics.sample.attentionstatechecker">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-feature android:name="com.softbank.hardware.pepper" />
 
@@ -12,7 +11,8 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".introduction.IntroductionActivity"
+            android:name=".sample.attentionstatechecker.introduction.IntroductionActivity"
+            android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".game.GameActivity" />
+        <activity android:name=".sample.attentionstatechecker.game.GameActivity" />
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="a0063537e19980b45bc08374ae8407f9301558c7" />

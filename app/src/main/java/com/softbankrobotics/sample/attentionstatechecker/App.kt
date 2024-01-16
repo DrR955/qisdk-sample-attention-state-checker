@@ -6,6 +6,7 @@ package com.softbankrobotics.sample.attentionstatechecker
 
 import android.app.Application
 import com.crashlytics.android.Crashlytics
+import com.softbankrobotics.BuildConfig
 import io.fabric.sdk.android.Fabric
 
 class App : Application() {
